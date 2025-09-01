@@ -1,35 +1,16 @@
-using DinkToPdf;
-using System.IO;
+using Edge.Services.Pdf;
 
 public class PdfService
 {
-	private readonly IConverter _converter;
+	private readonly IPdfConverter _pdfConverter;
 
-	public PdfService(IConverter converter)
+	public PdfService(IPdfConverter pdfConverter)
 	{
-		_converter = converter;
+		_pdfConverter = pdfConverter;
 	}
 
-	public byte[] GeneratePdf(string htmlContent)
+	public async Task<byte[]> GeneratePdfAsync(string htmlContent)
 	{
-		var globalSettings = new GlobalSettings
-		{
-			PaperSize = PaperKind.A4,
-			Orientation = Orientation.Portrait,
-		};
-
-		var objectSettings = new ObjectSettings
-		{
-			PagesCount = true,
-			HtmlContent = htmlContent,
-		};
-
-		var pdf = new HtmlToPdfDocument()
-		{
-			GlobalSettings = globalSettings,
-			Objects = { objectSettings },
-		};
-
-		return _converter.Convert(pdf);
+		return await _pdfConverter.ConvertToPDFAsync(htmlContent);
 	}
 }
