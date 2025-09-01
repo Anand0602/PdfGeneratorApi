@@ -14,14 +14,14 @@ public class PdfController : ControllerBase
 
     [HttpPost]
     [Route("generate")]
-    public IActionResult GeneratePdf([FromBody] PdfRequest request)
+    public async Task<IActionResult> GeneratePdf([FromBody] PdfRequest request)
     {
         if (request == null || string.IsNullOrWhiteSpace(request.HtmlContent))
         {
             return BadRequest("Invalid request.");
         }
 
-        var pdfBytes = _pdfService.GeneratePdf(request.HtmlContent);
+        var pdfBytes = await _pdfService.GeneratePdfAsync(request.HtmlContent);
 
         return File(pdfBytes, "application/pdf", "generated.pdf");
     }
@@ -29,5 +29,5 @@ public class PdfController : ControllerBase
 
 public class PdfRequest
 {
-    public string HtmlContent { get; set; }
+    public string HtmlContent { get; set; } = string.Empty;
 }
